@@ -3,7 +3,7 @@ import os
 import numpy as np
 
 
-def get_matrix(folder_path, output_path, pattern_size, show_corner):
+def get_matrix(folder_path, pattern_size, show_corner):
     pattern_points = np.zeros((np.prod(pattern_size), 3), np.float32)
     pattern_points[:, :2] = np.indices(pattern_size).T.reshape(-1, 2)
     img_points = []
@@ -22,10 +22,11 @@ def get_matrix(folder_path, output_path, pattern_size, show_corner):
                 cv2.waitKey(0)
         else:
             print("Image %s error." % filename)
-    rms, camera_matrix, dist_coefs, rvecs, tvecs = cv2.calibrateCamera(obj_points, img_points, (w, h), None, None)
+    return cv2.calibrateCamera(obj_points, img_points, (w, h), None, None)
+
+
+if __name__ == '__main__':
+    rms, camera_matrix, dist_coefs, rvecs, tvecs = get_matrix("../left/", (9, 6), 0)
     print("RMS:", rms)
     print("camera matrix:\n", camera_matrix)
     print("distortion coefficients:\n", dist_coefs[0])
-
-if __name__ == '__main__':
-    get_matrix("../left/", "../leftCamera", (9, 6), 0)
